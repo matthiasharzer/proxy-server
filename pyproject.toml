@@ -8,7 +8,7 @@ license = { text = "MIT" }
 dependencies = [
     "fastapi==0.135.3",
     "mysql-connector==2.2.9",
-    "pydantic==2.12.5",
+    "pydantic==2.13.2",
     "requests==2.33.1",
     "uvicorn==0.44.0",
 ]
