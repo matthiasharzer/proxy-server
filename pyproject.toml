@@ -15,7 +15,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ruff==0.15.16",
+    "ruff==0.15.17",
     "bandit==1.9.4",
     "pyright==1.1.410",
 ]
