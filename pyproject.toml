@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13,<=3.14"
 license = { text = "MIT" }
 dependencies = [
-    "fastapi==0.137.0",
+    "fastapi==0.138.0",
     "mysql-connector==2.2.9",
     "pydantic==2.13.4",
     "requests==2.34.2",
