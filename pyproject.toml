@@ -17,7 +17,7 @@ dependencies = [
 dev = [
     "ruff==0.15.20",
     "bandit==1.9.4",
-    "pyright==1.1.410",
+    "pyright==1.1.411",
 ]
 
 [tool.bandit]
