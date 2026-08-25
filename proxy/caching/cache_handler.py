@@ -29,7 +29,7 @@ def get_cache_provider() -> CacheProvider:
             user = os.environ.get("MYSQL_USER")
             password = os.environ.get("MYSQL_PASSWORD")
             database = os.environ.get("MYSQL_DATABASE")
-            port = os.environ.get("MYSQL_PORT", 3306)
+            port = os.environ.get("MYSQL_PORT", "3306")
 
             if None in (host, user, password, database):
                 print(

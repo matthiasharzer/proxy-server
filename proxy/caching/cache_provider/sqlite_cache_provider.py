@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from datetime import datetime
+from datetime import UTC, datetime
 from sqlite3 import Error
 
 from proxy.caching.cache_provider import CacheProvider
@@ -26,7 +26,7 @@ def _get_current_timestamp() -> str:
     Get the current timestamp as a string
     :return:
     """
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
 
 
 class SQLiteCacheProvider(CacheProvider):
@@ -77,10 +77,10 @@ class SQLiteCacheProvider(CacheProvider):
                 if not result:
                     return None
 
-                time_stamp = datetime.strptime(result[1], "%Y-%m-%d %H:%M:%S")
+                time_stamp = datetime.strptime(result[1], "%Y-%m-%d %H:%M:%S").replace(tzinfo=UTC)
 
                 return result[0], time_stamp
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print("Error while fetching from cache: " + str(e))
 
         return None

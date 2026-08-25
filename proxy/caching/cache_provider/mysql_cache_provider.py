@@ -1,11 +1,12 @@
 import json
-from datetime import datetime
+from datetime import UTC, datetime
+
+import mysql.connector
+import mysql.connector.cursor
 
 from proxy.caching.cache_provider import CacheProvider
 from proxy.caching.cache_provider.cache_provider import TimedCache
 from proxy.caching.cache_request import CacheRequest
-import mysql.connector
-import mysql.connector.cursor
 
 _TABLE_SQL = """
         CREATE TABLE IF NOT EXISTS cache (
@@ -24,7 +25,7 @@ def _get_current_timestamp() -> str:
     Get the current timestamp as a string
     :return:
     """
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
 
 
 class MySQLCacheProvider(CacheProvider):
@@ -79,7 +80,7 @@ class MySQLCacheProvider(CacheProvider):
 
         result = c.fetchone()
         if result:
-            return result[0], result[1]
+            return result[0], result[1].replace(tzinfo=UTC)
         return None
 
     def set(self, request: CacheRequest, response: bytes) -> None:

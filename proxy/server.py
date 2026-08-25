@@ -1,4 +1,5 @@
 from typing import Any
+
 import requests
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,11 +21,11 @@ def get_url(request: Request) -> str:
     if not url.startswith("http"):
         return url
 
-    if url.startswith("http://") or url.startswith("https://"):
+    if url.startswith(("http://", "https://")):
         return url
 
     # Weird behaviour of FastAPI on linux to collapse multiple slashes
-    if url.startswith("http:/") or url.startswith("https:/"):
+    if url.startswith(("http:/", "https:/")):
         return url.replace("http:/", "http://").replace("https:/", "https://")
 
     return url
@@ -53,7 +54,7 @@ def do_proxy_request(url: str, request: Request, body_: Any | None = None) -> by
         return proxy_request.content
     except requests.exceptions.ConnectionError:
         raise HTTPException(status_code=404, detail="Connection Error")
-    except Exception:
+    except Exception:  # noqa: BLE001
         raise HTTPException(status_code=400, detail="Error")
 
 
@@ -78,7 +79,7 @@ async def handle_cache(request: Request, max_age: int):
 
     try:
         cached = cache.get(cache_request)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Error while getting from cache: {e}")
         cached = None
 
@@ -88,7 +89,7 @@ async def handle_cache(request: Request, max_age: int):
     response = do_proxy_request(url, request, body)
     try:
         cache.set(cache_request, response)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Error while setting cache: {e}")
 
     return Response(content=response)
