@@ -1,11 +1,14 @@
 import json
+import logging
 import sqlite3
-from datetime import datetime
+from datetime import UTC, datetime
 from sqlite3 import Error
 
 from proxy.caching.cache_provider import CacheProvider
 from proxy.caching.cache_provider.cache_provider import TimedCache
 from proxy.caching.cache_request import CacheRequest
+
+logger = logging.getLogger(__name__)
 
 _TABLE_SQL = """
         CREATE TABLE IF NOT EXISTS cache (
@@ -23,10 +26,10 @@ _TABLE_SQL = """
 
 def _get_current_timestamp() -> str:
     """
-    Get the current timestamp as a string
+    Get the current timestamp as a local-time string for database compatibility
     :return:
     """
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now(UTC).astimezone().strftime("%Y-%m-%d %H:%M:%S")
 
 
 class SQLiteCacheProvider(CacheProvider):
@@ -77,11 +80,14 @@ class SQLiteCacheProvider(CacheProvider):
                 if not result:
                     return None
 
-                time_stamp = datetime.strptime(result[1], "%Y-%m-%d %H:%M:%S")
+                # Existing database timestamps use the server's local timezone.
+                time_stamp = datetime.strptime(
+                    result[1], "%Y-%m-%d %H:%M:%S"
+                ).astimezone()
 
                 return result[0], time_stamp
-        except Exception as e:
-            print("Error while fetching from cache: " + str(e))
+        except Exception:
+            logger.exception("Error while fetching from cache")
 
         return None
 

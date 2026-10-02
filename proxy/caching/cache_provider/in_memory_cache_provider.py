@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import UTC, datetime
 
 from proxy.caching.cache_provider import CacheProvider
 from proxy.caching.cache_provider.cache_provider import TimedCache
@@ -27,4 +27,4 @@ class InMemoryCacheProvider(CacheProvider):
 
     def set(self, request: CacheRequest, response: bytes) -> None:
         hashed = _hash_request(request)
-        self.cache[hashed] = (response, datetime.now())
+        self.cache[hashed] = (response, datetime.now(UTC))
