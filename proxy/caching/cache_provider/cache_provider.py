@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from datetime import datetime
+from datetime import UTC, datetime
 
 from proxy.caching.cache_request import CacheRequest
 
@@ -31,7 +31,7 @@ class CacheProvider(ABC):
 
         response, timestamp = cached
 
-        time_diff = datetime.now() - timestamp
+        time_diff = datetime.now(UTC) - timestamp
 
         if request.max_age <= 0 or 0 < time_diff.seconds < request.max_age:
             return response
